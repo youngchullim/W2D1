@@ -27,10 +27,11 @@ class Display
 
   def make_move
     render
+    flag = nil
     # This code is bad because it calls cursor.get_input twice!
-    while @cursor.get_input == nil
+    while flag == nil
       render
-      @cursor.get_input
+      flag = @cursor.get_input
     end
   end
 
