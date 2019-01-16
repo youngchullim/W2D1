@@ -2,11 +2,10 @@ require_relative 'piece.rb'
 
 class Rook < Piece
   include SlidingPiece
-  attr_reader :pos, :color
 
   def initialize(pos, color, board)
     super
-    @symbol = 'R'
+    @symbol = '♜'
   end
 
   def move_dirs

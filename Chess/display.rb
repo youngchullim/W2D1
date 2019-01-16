@@ -8,30 +8,50 @@ class Display
     @cursor = Cursor.new([0,0], @board)
   end
 
-  def render
+  def render(message="")
     system("clear")
+
     @board.each_with_index do |row, r_idx|
       row.each_with_index do |col, c_idx|
         pos = [r_idx, c_idx]
-        cursor = @cursor.cursor_pos == pos
-        cursor ? color = :red : color = :green
-        if @board[pos].is_a?(Piece)
-          print "P".center(3).colorize(color)
-        else
-          print "*".center(3).colorize(color)
-        end
+        selected_cur = @cursor.cursor_pos == pos
+        selected_cur ? color = :yellow : color = @board[pos].color
+        print @board[pos].symbol.center(3).colorize(color)
       end
       puts
     end
+    puts message
   end
 
   def make_move
-    render
+    begin
+    render("Choose your piece!")
     flag = nil
-    # This code is bad because it calls cursor.get_input twice!
     while flag == nil
-      render
+      render("Choose your piece!")
       flag = @cursor.get_input
+    end
+    start_pos = flag
+
+    render("Choose destination!")
+    flag = nil
+    while flag == nil
+      render("Choose destination!")
+      flag = @cursor.get_input
+    end
+    end_pos = flag
+
+    @board.move_piece(start_pos, end_pos)
+    rescue
+      puts "Invalid move, Try again"
+      sleep(1.5)
+      retry
+    end
+    render
+    if @board.in_check?(:blue)
+      puts "Blue is in check"
+    elsif @board.in_check?(:red)
+      puts "Red is in check"
     end
   end
 
